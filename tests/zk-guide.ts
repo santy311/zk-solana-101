@@ -20,8 +20,8 @@ describe("zk-guide", () => {
       "./circuit/multiply2numbers_0002.zkey"
     )
 
-    await program.methods.verify(new BN(publicSignals[0].toString()), Array.from(convertProofToBytes(proof))).rpc();
-    console.log("Verified!");
+    const txn = await program.methods.verify(new BN(publicSignals[0].toString()), Array.from(convertProofToBytes(proof))).rpc();
+    console.log("Verified!", txn);
   })
 })
 
