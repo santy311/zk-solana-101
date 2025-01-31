@@ -2124,4 +2124,5 @@ dependencies = [
  "ark-bn254 0.5.0",
  "ark-serialize 0.5.0",
  "groth16-solana",
+ "num-bigint",
 ]

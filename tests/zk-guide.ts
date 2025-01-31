@@ -11,17 +11,49 @@ describe("zk-guide", () => {
   const program = anchor.workspace.ZkGuide as Program<ZkGuide>;
 
   it("Verifies a proof", async () => {
-    const a = BigInt(100);
-    const b = BigInt(2);
-
     const { proof, publicSignals } = await snarkjs.groth16.fullProve(
-      { a: BigInt(100), b: BigInt(2) },
-      "./circuit/multiply2numbers_js/multiply2numbers.wasm",
-      "./circuit/multiply2numbers_0002.zkey"
+      {
+        nullifier: BigInt(1234),
+        secret: BigInt(5678),
+        path_elements: [
+          "20595346326572914964186581639484694308224330290454662633399973481953444150659",
+          "20403006909364192806930024120627684483381303094884559877071101381067530732246",
+          "6494326098466164952080577608230455345257528668955319299844368625460411395488"
+        ],
+        path_indices: [0, 1, 0],
+        root: "15157027679257943619680443910020794781589735471572686454300031870659269110888",
+        nullifier_hash: "6739237337836053036050092520295483268472201574170554680955096201102421203684"
+      },
+      "./circuit/merkle/merkle.wasm",
+      "./circuit/merkle/merkle.zkey"
     )
 
-    const txn = await program.methods.verify(new BN(publicSignals[0].toString()), Array.from(convertProofToBytes(proof))).rpc();
+    console.log(proof);
+    console.log(publicSignals);
+
+    const proofBytes = convertProofToBytes(proof);
+    console.log("Proof Bytes:", proofBytes);
+    console.log("Proof Bytes Length:", proofBytes.length);
+
+    console.log("publicSignals[0]", publicSignals[0].length);
+    console.log("publicSignals[1]", publicSignals[1].length);
+    const txn = await program.methods.verify(
+      publicSignals[0].toString(),
+      publicSignals[1].toString(),
+      Array.from(proofBytes)
+    ).rpc(
+      {
+        commitment: "confirmed"
+      }
+    );
     console.log("Verified!", txn);
+
+    // Get the transaction details with explicit commitment level
+    const txnDetails = await program.provider.connection.getTransaction(txn, {
+      commitment: "confirmed"
+    });
+    
+    console.log("txnDetails", txnDetails);
   })
 })
 

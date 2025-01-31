@@ -5,7 +5,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-zk_guide = "BTE9HVuchGLa2nDK5PRPwzfjHkbusdrMZFBnryGFVWTz"
+zk_guide = "31PJTVfAeRwLSJe5kvP6CrWZWpHqpdfMwtBeKtqS5xuK"
 
 [registry]
 url = "https://api.apr.dev"
